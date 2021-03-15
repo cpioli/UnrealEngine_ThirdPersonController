@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
+UCLASS(Abstract, Blueprintable, BlueprintType)
 class THIRDPERSCONTROLLER_API UControlInputStateBase : public UObject
 {
 	GENERATED_BODY()
