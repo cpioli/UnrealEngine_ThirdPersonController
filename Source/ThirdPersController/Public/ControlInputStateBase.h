@@ -42,4 +42,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void InputJumpButton(ACharacter *charRef, bool pressedOrReleased);
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
+		void InputSprintButton(ACharacter *charRef, bool pressedOrReleased);
 };
