@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "DrawDebugHelpers.h"
 #include "UObject/NoExportTypes.h"
 #include "GameFramework/Character.h"
+#include "InputStateMachineCharacter.h"
 #include "ControlInputStateBase.generated.h"
 
 /**
@@ -28,26 +30,26 @@ public:
 		float maxSprintSpeed;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnStateEnter(ACharacter *charRef);
+		void OnStateEnter(AInputStateMachineCharacter *charRef);
 	
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnStateExit(ACharacter *charRef);
+		void OnStateExit(AInputStateMachineCharacter *charRef);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnUpdate(ACharacter *charRef, float deltaTime);
+		void OnUpdate(AInputStateMachineCharacter *charRef, float deltaTime);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void OnAnimationUpdate(ACharacter *charRef, float deltaTime);
+		void OnAnimationUpdate(AInputStateMachineCharacter *charRef, float deltaTime);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void InputAxisLeftAnalogStick(ACharacter *charRef, float forwardAxisValue, float rightAxisValue);
+		void InputAxisLeftAnalogStick(AInputStateMachineCharacter *charRef, float forwardAxisValue, float rightAxisValue);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void InputAxisRightAnalogStick(ACharacter *charRef, float lookUpRate, float turnRate);
+		void InputAxisRightAnalogStick(AInputStateMachineCharacter *charRef, float lookUpRate, float turnRate);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void InputJumpButton(ACharacter *charRef, bool pressedOrReleased);
+		void InputJumpButton(AInputStateMachineCharacter *charRef, bool pressedOrReleased);
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
-		void InputSprintButton(ACharacter *charRef, bool pressedOrReleased);
+		void InputSprintButton(AInputStateMachineCharacter *charRef, bool pressedOrReleased);
 };
