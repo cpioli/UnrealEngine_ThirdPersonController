@@ -39,13 +39,16 @@ public:
 	AInputStateMachineCharacter();
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool isSprintButtonPressed;
+	bool bIsSprintButtonPressed;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	bool isJumpButtonPressed;
+	bool bIsJumpButtonPressed;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> stateRepository;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		TMap<TSubclassOf<UControlInputStateBase>, TEnumAsByte<EInputState::InputState>> EnumStateRepository;
 
 
 protected:

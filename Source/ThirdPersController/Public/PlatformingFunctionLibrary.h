@@ -24,9 +24,9 @@ public:
 	static float GetAngle(const FVector & A, const FVector & B);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool PressedAgainstWall(const FVector & forwardVector, const FVector & wallNormalVector, float degreeRange);
+		static bool bIsPressedAgainstWall(const FVector & forwardVector, const FVector & wallNormalVector, float degreeRange);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool IsClimbableAtPosition(const FVector & velocity, const FVector & position, const FVector & ledgePosition, float heightComparator = 50.0f);
+		static bool bIsClimbableAtPosition(const FVector & velocity, const FVector & position, const FVector & ledgePosition, float heightComparator = 50.0f);
 	
 };

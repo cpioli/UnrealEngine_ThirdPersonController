@@ -27,14 +27,16 @@ FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter
 	return FVector(0.0f, 0.0f, 0.0f);
 }
 
-bool UPlatformingFunctionLibrary::PressedAgainstWall(const FVector & forwardVector, const FVector & wallNormalVector, float degreeRange)
+bool UPlatformingFunctionLibrary::bIsPressedAgainstWall(const FVector & forwardVector, const FVector & wallNormalVector, float degreeRange)
 {
 	FVector vectorB = wallNormalVector * -1.0f;
 	float degree = GetAngle(forwardVector, wallNormalVector);
 	return degree < degreeRange;
 }
 
-bool UPlatformingFunctionLibrary::IsClimbableAtPosition(const FVector & velocity, const FVector & position, const FVector & ledgePosition, float heightComparator)
+
+//currently unused, meant to replace MidairInputState.InRangeOfLedge(CharRef)
+bool UPlatformingFunctionLibrary::bIsClimbableAtPosition(const FVector & velocity, const FVector & position, const FVector & ledgePosition, float heightComparator)
 {
 	float ledgeToShoulderDistance = ledgePosition.Z - position.Z;
 	

@@ -24,10 +24,10 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere)
-	float maxRunSpeed;
+	float MaxRunSpeed;
 
 	UPROPERTY(EditAnywhere)
-		float maxSprintSpeed;
+		float MaxSprintSpeed;
 
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent)
 		void OnStateEnter(AInputStateMachineCharacter *charRef);
