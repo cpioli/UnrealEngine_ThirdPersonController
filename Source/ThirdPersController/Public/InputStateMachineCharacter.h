@@ -47,7 +47,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
 	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IKHelpers")
 		TMap<TSubclassOf<UControlInputStateBase>, TEnumAsByte<EInputState::InputState>> EnumStateRepository;
 
 
