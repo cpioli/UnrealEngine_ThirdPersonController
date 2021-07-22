@@ -50,3 +50,21 @@ bool UPlatformingFunctionLibrary::bIsClimbableAtPosition(const FVector & velocit
 		return ledgeToShoulderDistance < heightComparator;
 	}
 }
+
+void UPlatformingFunctionLibrary::HandleStandardInput(APawn* outPawn, const float forwardAxisScale, const float rightAxisScale)
+{
+	if (outPawn->Controller == nullptr) return;
+
+	const FRotator pawnRotator = outPawn->Controller->GetControlRotation();
+	const FRotator YawRotation(0, pawnRotator.Yaw, 0);
+
+	if (forwardAxisScale != 0.0f) {
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		outPawn->AddMovementInput(Direction, forwardAxisScale);
+	}
+
+	if (rightAxisScale != 0.0f) {
+		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+		outPawn->AddMovementInput(Direction, rightAxisScale);
+	}
+}

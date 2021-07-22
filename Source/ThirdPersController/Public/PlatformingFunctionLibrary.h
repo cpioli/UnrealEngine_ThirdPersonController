@@ -28,5 +28,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bIsClimbableAtPosition(const FVector & velocity, const FVector & position, const FVector & ledgePosition, float heightComparator = 50.0f);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static void HandleStandardInput(APawn* outPawn, const float forwardAxisScale, const float rightAxisScale);
 	
 };
