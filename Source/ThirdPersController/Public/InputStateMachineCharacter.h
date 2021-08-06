@@ -44,11 +44,23 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bIsJumpButtonPressed;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
 
-	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "IKHelpers")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 		TMap<TSubclassOf<UControlInputStateBase>, TEnumAsByte<EInputState::InputState>> EnumStateRepository;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		FVector IKLeftHandPosition;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		FVector IKRightHandPosition;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		bool bLeftHandAgainstWall;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		bool bRightHandAgainstWall;
 
 
 protected:
