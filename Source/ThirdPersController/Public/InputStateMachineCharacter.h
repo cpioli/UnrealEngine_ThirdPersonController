@@ -50,6 +50,12 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 		TMap<TSubclassOf<UControlInputStateBase>, TEnumAsByte<EInputState::InputState>> EnumStateRepository;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
+		UControlInputStateBase *CurrentInputState;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
+		UControlInputStateBase *PreviousInputState;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
 		FVector IKLeftHandPosition;
 
