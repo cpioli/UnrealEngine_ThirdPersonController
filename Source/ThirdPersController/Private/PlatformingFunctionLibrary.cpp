@@ -3,6 +3,7 @@
 
 #include "PlatformingFunctionLibrary.h"
 #include "InputStateMachineCharacter.h"
+#include "DrawDebugHelpers.h"
 
 /*
 generic function to retrieve an angle from two vectors
@@ -67,4 +68,13 @@ void UPlatformingFunctionLibrary::HandleStandardInput(APawn* outPawn, const floa
 		const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 		outPawn->AddMovementInput(Direction, rightAxisScale);
 	}
+}
+
+
+//Lookup Quat.h https://github.com/EpicGames/UnrealEngine/blob/c3caf7b6bf12ae4c8e09b606f10a09776b4d1f38/Engine/Source/Runtime/Core/Public/Math/Quat.h
+void UPlatformingFunctionLibrary::DebugLine(const UWorld* InWorld, const FVector& start, const FRotator& direction, const float& distance, FColor &lineColor, float duration, float thickness)
+{
+	FVector _start = start;
+	FVector _end = _start + direction.Quaternion().GetForwardVector() * distance;
+	DrawDebugLine(InWorld, _start, _end, lineColor, false, duration, 0U, thickness);
 }

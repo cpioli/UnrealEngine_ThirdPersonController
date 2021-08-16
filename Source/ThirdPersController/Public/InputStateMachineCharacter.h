@@ -4,10 +4,35 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-//#include "ControlInputStateBase.h"
 #include "InputStateMachineCharacter.generated.h"
 
+USTRUCT(BlueprintType, DisplayName="WallProjection")
+struct FWallProjectionLocation {
+	GENERATED_BODY()
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsAvailable;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FVector Location;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FVector Normal;
+};
+
+USTRUCT(BlueprintType, DisplayName="Ledge")
+struct FLedge {
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool bIsAvailable;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float HeightFromFloor;
+	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FVector Location;
+};
 
 UENUM(BlueprintType)
 namespace EInputState
@@ -68,6 +93,27 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
 		bool bRightHandAgainstWall;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FWallProjectionLocation KneeToWallHeight;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FWallProjectionLocation PelvisToWallHeight;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FWallProjectionLocation ShoulderToWallHeight;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FLedge CurrentLedge;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		TSet<AActor*> OverlappingObjects;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool bCanTrace;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float CurrentHeightFromFloor;
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -80,4 +126,17 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION(BlueprintCallable)
+		float GetHeightFromFloor(float downwardTraceDistance = 900.0f);
+
+	UFUNCTION(BlueprintCallable)
+		FRotator GetAlignmentToWall();
+
+	//TODO: check and determine if I need to use a pointer to UControlInputStateBase instead of
+	//      TSubclassOf<UControlInputStateBase>
+	UFUNCTION(BlueprintCallable)
+		void SetCurrentState(TSubclassOf<UControlInputStateBase> newState);
+
+	UFUNCTION(BlueprintCallable)
+		void SetCurrentAnimState(TEnumAsByte<EInputState::InputState> newState);
 };

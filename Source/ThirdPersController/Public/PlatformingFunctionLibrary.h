@@ -31,5 +31,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static void HandleStandardInput(APawn* outPawn, const float forwardAxisScale, const float rightAxisScale);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static void DebugLine(const UWorld* InWorld, const FVector& start, const FRotator& direction, const float &distance, 
+							   FColor& lineColor,  float duration = 12.0f, float thickness = 5.0f);
 	
 };
