@@ -2,6 +2,7 @@
 
 
 #include "InputStateMachineCharacter.h"
+#include "ControlInputStateBase.h"
 #include "Components/CapsuleComponent.h"
 
 // Sets default values
@@ -63,7 +64,34 @@ FRotator AInputStateMachineCharacter::GetAlignmentToWall()
 
 void AInputStateMachineCharacter::SetCurrentState(TSubclassOf<UControlInputStateBase> newState)
 {
+	if (newState == nullptr) {
+		UE_LOG(LogTemp, Warning, TEXT("New State has not been specified!"));
+		//FDebug::DumpStackTraceToLog();
+		return;
+	}
+	if (!StateRepository.Contains(newState)) return;
+	if (CurrentInputState != nullptr)
+	{
+		if (this->CurrentInputState->GetClass() == newState->GetClass())
+			return;
+		PreviousInputState = CurrentInputState;
+		PreviousInputState->OnStateExit(this);
+	}
+	CurrentInputState = *StateRepository.Find(newState);
+	CurrentInputState->OnStateEnter(this);
 
+	UE_LOG(LogTemp, Warning, TEXT("Does this work outside the if statement?"));
+	if (GEngine)
+	{
+		FString statesChanged = FString(TEXT(""));
+		if (PreviousInputState != nullptr)
+		{
+			statesChanged.Append(PreviousInputState->GetFName().ToString());
+			statesChanged.Append("->");
+		}
+		statesChanged.Append(CurrentInputState->GetFName().ToString());
+		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, statesChanged, true, FVector2D(1.f, 1.f));
+	}
 }
 
 void AInputStateMachineCharacter::SetCurrentAnimState(TEnumAsByte<EInputState::InputState> newState)

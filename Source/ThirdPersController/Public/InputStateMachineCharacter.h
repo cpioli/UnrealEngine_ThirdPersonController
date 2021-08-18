@@ -134,7 +134,7 @@ public:
 
 	//TODO: check and determine if I need to use a pointer to UControlInputStateBase instead of
 	//      TSubclassOf<UControlInputStateBase>
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "State Machine")
 		void SetCurrentState(TSubclassOf<UControlInputStateBase> newState);
 
 	UFUNCTION(BlueprintCallable)
