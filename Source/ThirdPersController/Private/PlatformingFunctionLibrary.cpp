@@ -18,6 +18,7 @@ float UPlatformingFunctionLibrary::GetAngle(const FVector & A, const FVector & B
 
 	/*
 	Find out if there is a wall nearby us
+	UNUSED
 	*/
 FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter *character)
 {
@@ -32,6 +33,7 @@ bool UPlatformingFunctionLibrary::bIsPressedAgainstWall(const FVector & forwardV
 {
 	FVector vectorB = wallNormalVector * -1.0f;
 	float degree = GetAngle(forwardVector, wallNormalVector);
+	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Degree: %02d"), degree), true, FVector2D(1.f, 1.f));
 	return degree < degreeRange;
 }
 
@@ -77,4 +79,14 @@ void UPlatformingFunctionLibrary::DebugLine(const UWorld* InWorld, const FVector
 	FVector _start = start;
 	FVector _end = _start + direction.Quaternion().GetForwardVector() * distance;
 	DrawDebugLine(InWorld, _start, _end, lineColor, false, duration, 0U, thickness);
+}
+
+FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge)
+{
+	FVector sol;
+	sol.X = Shoulder.Location.X + Shoulder.Normal.X * 22.0f; //22.0 is a magic number representing the radius of the capsule collider.
+	sol.Y = Shoulder.Location.Y + Shoulder.Normal.Y * 22.0f;
+	sol.Z = TargetedLedge.Location.Z - 100.0f; //Another magic number representing where the midpoint of the capsule collider should be positioned
+
+	return sol;
 }

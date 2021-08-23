@@ -103,13 +103,13 @@ void AInputStateMachineCharacter::SetCurrentAnimState(TEnumAsByte<EInputState::I
 // equivalent draw debug line calls from "TraceLineByChannel" Kismet node can be found in this file
 // https://github.com/EpicGames/UnrealEngine/blob/c3caf7b6bf12ae4c8e09b606f10a09776b4d1f38/Engine/Source/Runtime/Engine/Private/KismetTraceUtils.cpp
 // look for the function "DrawDebugLineTraceSingle"
-void AInputStateMachineCharacter::FindNearbyWalls(const UChildActorComponent* position, const float distance, /*EDrawDebugTrace::Type is missing, dunno what to replace it with?*/
-	FLinearColor TraceColor, FLinearColor TraceHitColor, FWallProjectionLocation& wallLoc) 
+void AInputStateMachineCharacter::FindNearbyWalls(const UChildActorComponent* Position, const float Distance, /*EDrawDebugTrace::Type is missing, dunno what to replace it with?*/
+	FLinearColor TraceColor, FLinearColor TraceHitColor, FWallProjectionLocation& WallLoc) 
 {
-	FVector start = position->GetComponentLocation();
+	FVector start = Position->GetComponentLocation();
 	//gets the position's component rotation, puts it back into the rotaiton matrix format, returns the scaled axis
 	//https://answers.unrealengine.com/questions/236461/trying-to-get-the-forward-and-right-vector-from-a.html
-	FVector end = start + FRotationMatrix(position->GetComponentRotation()).GetScaledAxis(EAxis::X) * distance;
+	FVector end = start + FRotationMatrix(Position->GetComponentRotation()).GetScaledAxis(EAxis::X) * Distance;
 
 	FHitResult hitResult;
 	FCollisionQueryParams traceParams;
@@ -117,8 +117,8 @@ void AInputStateMachineCharacter::FindNearbyWalls(const UChildActorComponent* po
 	traceParams.AddIgnoredActor(this);
 	bool bIsHit = GetWorld()->LineTraceSingleByChannel(hitResult, start, end, ECC_Visibility, traceParams);
 	if (!bIsHit) {
-		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString(TEXT("Could not find a wall")), true);
-		wallLoc.bIsAvailable = false;
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString(TEXT("Could not find a wall")), true);
+		WallLoc.bIsAvailable = false;
 		return;
 	}
 
@@ -127,9 +127,9 @@ void AInputStateMachineCharacter::FindNearbyWalls(const UChildActorComponent* po
 	::DrawDebugLine(GetWorld(), hitResult.ImpactPoint, end, TraceHitColor.ToFColor(true), false, 0.f);
 	::DrawDebugPoint(GetWorld(), hitResult.ImpactPoint, /*KISMET_TRACE_DEBUG_IMPACTPOINT_SIZE*/ 16.0f, TraceColor.ToFColor(true), false, 0.f);
 #endif
-	wallLoc.bIsAvailable = true;
-	wallLoc.Location = hitResult.Location;
-	wallLoc.Normal = hitResult.Normal;
+	WallLoc.bIsAvailable = true;
+	WallLoc.Location = hitResult.Location;
+	WallLoc.Normal = hitResult.Normal;
 }
 
 void AInputStateMachineCharacter::FindNearbyLedges(const float DistanceFromCharacter, const float HeightAboveCharacter,
@@ -157,7 +157,7 @@ void AInputStateMachineCharacter::FindNearbyLedges(const float DistanceFromChara
 
 }
 
-/*void AInputStateMachineCharacter::TraceIKHandToWall(const FName& SocketName, const float& TraceDistance)
+void AInputStateMachineCharacter::TraceIKHandToWall(const FName& SocketName, const float& TraceDistance)
 {
 	bool LeftSocket;
 	//TODO: Must not rely on magic strings, should expose these values in the Blueprint incase a mesh uses other names
@@ -195,4 +195,4 @@ void AInputStateMachineCharacter::FindNearbyLedges(const float DistanceFromChara
 		this->IKRightHandPosition = outHit.Location;
 	}
 	return;
-}*/
+}

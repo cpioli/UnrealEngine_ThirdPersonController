@@ -69,6 +69,15 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bIsJumpButtonPressed;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		bool bCanTrace; //if true, run the "FindNearbyWalls" functions. Currently unused in C++ or Blueprint
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		bool bLeftHandAgainstWall;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
+		bool bRightHandAgainstWall;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
 
@@ -86,12 +95,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
 		FVector IKRightHandPosition;
-	
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
-		bool bLeftHandAgainstWall;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
-		bool bRightHandAgainstWall;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		FWallProjectionLocation KneeToWallHeight;
@@ -107,9 +110,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		TSet<AActor*> OverlappingObjects;
-
-	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-		bool bCanTrace;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float CurrentHeightFromFloor;
@@ -145,6 +145,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 		void FindNearbyLedges(const float DistanceFromCharacter, const float HeightAboveCharacter, FLinearColor TraceColor, FLinearColor TraceHitLinearColor);
 
-	//UFUNCTION(BlueprintCallable)
-	//	void TraceIKHandToWall(const FName& SocketName, const float& TraceDistance);
+	UFUNCTION(BlueprintCallable)
+		void TraceIKHandToWall(const FName& SocketName, const float& TraceDistance);
 };
