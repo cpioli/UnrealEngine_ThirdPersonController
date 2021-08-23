@@ -132,11 +132,19 @@ public:
 	UFUNCTION(BlueprintCallable)
 		FRotator GetAlignmentToWall();
 
-	//TODO: check and determine if I need to use a pointer to UControlInputStateBase instead of
-	//      TSubclassOf<UControlInputStateBase>
 	UFUNCTION(BlueprintCallable, Category = "State Machine")
 		void SetCurrentState(TSubclassOf<UControlInputStateBase> newState);
 
 	UFUNCTION(BlueprintCallable)
 		void SetCurrentAnimState(TEnumAsByte<EInputState::InputState> newState);
+
+	UFUNCTION(BlueprintCallable, meta=(AdvancedDisplay="TraceColor,TraceHitColor"))
+		void FindNearbyWalls(const UChildActorComponent* Position, const float Distance, /*EDrawDebugTrace::Type is missing, dunno what to replace it with?*/
+			FLinearColor TraceColor, FLinearColor TraceHitColor, UPARAM(ref) FWallProjectionLocation& WallLoc);
+
+	UFUNCTION(BlueprintCallable)
+		void FindNearbyLedges(const float DistanceFromCharacter, const float HeightAboveCharacter, FLinearColor TraceColor, FLinearColor TraceHitLinearColor);
+
+	//UFUNCTION(BlueprintCallable)
+	//	void TraceIKHandToWall(const FName& SocketName, const float& TraceDistance);
 };
