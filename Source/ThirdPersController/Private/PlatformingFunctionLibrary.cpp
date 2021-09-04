@@ -3,6 +3,8 @@
 
 #include "PlatformingFunctionLibrary.h"
 #include "InputStateMachineCharacter.h"
+#include "Curves/CurveVector.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 
 /*
@@ -33,7 +35,7 @@ bool UPlatformingFunctionLibrary::bIsPressedAgainstWall(const FVector & forwardV
 {
 	FVector vectorB = wallNormalVector * -1.0f;
 	float degree = GetAngle(forwardVector, wallNormalVector);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Degree: %02d"), degree), true, FVector2D(1.f, 1.f));
+	//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Degree: %02d"), degree), true, FVector2D(1.f, 1.f));
 	return degree < degreeRange;
 }
 
@@ -87,6 +89,74 @@ FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& 
 	sol.X = Shoulder.Location.X + Shoulder.Normal.X * 22.0f; //22.0 is a magic number representing the radius of the capsule collider.
 	sol.Y = Shoulder.Location.Y + Shoulder.Normal.Y * 22.0f;
 	sol.Z = TargetedLedge.Location.Z - 100.0f; //Another magic number representing where the midpoint of the capsule collider should be positioned
+
+	return sol;
+}
+
+bool UPlatformingFunctionLibrary::bCollidedWithWall(AInputStateMachineCharacter* Character)
+{
+	return Character->ShoulderToWallHeight.bIsAvailable 
+		|| Character->PelvisToWallHeight.bIsAvailable 
+		|| Character->KneeToWallHeight.bIsAvailable;
+}
+
+bool UPlatformingFunctionLibrary::bNotAgainstWall(AInputStateMachineCharacter* Character)
+{
+	return !Character->ShoulderToWallHeight.bIsAvailable
+		&& !Character->PelvisToWallHeight.bIsAvailable
+		&& !Character->KneeToWallHeight.bIsAvailable;
+}
+
+bool UPlatformingFunctionLibrary::bWallIsShort(AInputStateMachineCharacter* Character)
+{
+	return !Character->ShoulderToWallHeight.bIsAvailable
+		&& (Character->PelvisToWallHeight.bIsAvailable || Character->KneeToWallHeight.bIsAvailable);
+
+}
+
+bool UPlatformingFunctionLibrary::bInRangeOfLedge(const FLedge& CurrentLedge, const UChildActorComponent* Position, const FVector& LastUpdateVelocity)
+{
+	float LedgeToShoulderDistance = CurrentLedge.Location.Z - Position->GetComponentLocation().Z;
+	if (LastUpdateVelocity.Z > 0.f) { //if we are moving up in the elevation direction
+		return -10.f <= LedgeToShoulderDistance && 10.f >= LedgeToShoulderDistance;
+	}
+	else {
+		return LedgeToShoulderDistance >= 50.0f;;
+	}
+}
+
+//VectorLengthXY node is called as static float VSizeXY(FVector A) in C++
+//The function is just "Size2D()"
+//Also: needed to include "GameFrameworks/CharacterMovementComponent.h" to retrieve lastUpdateVelocity
+bool UPlatformingFunctionLibrary::bCanClimbLedge(const AInputStateMachineCharacter *Character, const UChildActorComponent *Position)
+{
+	if (!Character->ShoulderToWallHeight.bIsAvailable) return false;
+
+	FVector forward = FRotationMatrix(Character->GetActorRotation()).GetScaledAxis(EAxis::X);
+
+	FVector lastUpdateVelocity = Character->GetCharacterMovement()->GetLastUpdateVelocity();
+	
+	return bIsPressedAgainstWall(forward, Character->ShoulderToWallHeight.Normal, /*DegreeRange*/10.0f)
+		&& bInRangeOfLedge(Character->CurrentLedge, Position, lastUpdateVelocity)
+		&& lastUpdateVelocity.Size2D() >= 0.0f;
+}
+
+/*
+Calculates the position of an object based on its start and end values
+using a UCurveVector object as the Interpolation type
+*/
+
+FVector UPlatformingFunctionLibrary::GetLerpedPosition(const FVector& Begin, const FVector& End, const UCurveVector* Curve, const float T)
+{
+	FVector sol = FVector::ZeroVector;
+	if (Curve == nullptr) return sol;
+	float Tstart, Tend;
+	Curve->GetTimeRange(Tstart, Tend);
+	if (T < Tstart || T > Tend) return sol; //TODO: add a UELOG message
+
+	sol.X = Begin.X + (End.X - Begin.X) * Curve->FloatCurves[0].Eval(T);
+	sol.Y = Begin.Y + (End.Y - Begin.Y) * Curve->FloatCurves[1].Eval(T);
+	sol.Z = Begin.Z + (End.Z - Begin.Z) * Curve->FloatCurves[2].Eval(T);
 
 	return sol;
 }

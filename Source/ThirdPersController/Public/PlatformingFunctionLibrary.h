@@ -36,6 +36,25 @@ public:
 		static void DebugLine(const UWorld* InWorld, const FVector& start, const FRotator& direction, const float &distance, 
 							   FColor& lineColor,  float duration = 12.0f, float thickness = 5.0f);
 	
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static FVector SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bCollidedWithWall(AInputStateMachineCharacter *Character);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bNotAgainstWall(AInputStateMachineCharacter* Character);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bWallIsShort(AInputStateMachineCharacter* Character);
+
+	//Need to separate the UChildActorComponent object because C++ would not be aware of Components added in the Blueprint phase.
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bInRangeOfLedge(const FLedge &CurrentLedge, const UChildActorComponent *Position, const FVector &LastUpdateVelocity);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bCanClimbLedge(const AInputStateMachineCharacter *Character, const UChildActorComponent *Position);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static FVector GetLerpedPosition(const FVector& Begin, const FVector& End, const UCurveVector* Curve, const float T);
 };
