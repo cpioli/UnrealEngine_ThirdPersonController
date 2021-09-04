@@ -1,0 +1,66 @@
+notes:
+
+40 frames in the animation
+
+every frame is est 0.025 seconds worth of time
+
+
+Ball_l:
+
+z: *starts at 0, moves to 102
+	frame 8 - frame 22
+	(0 - 9, small bits)
+	(frame 10 is when the big push begins, reaches 113 at frame 16)
+y: *starts at 18, moves to 129
+	0 - 3/4: 15 - 32
+	(frame 0 - frame 3 or 4 (unused by me because it's moving forward)
+	
+	10 - 19: moves high (up to 129!)
+	
+	most key movement is in frames 4 - 19 (.1 - 0.65)
+	
+(Yes, Y and Z, only because the rotation is different. We'd use X and Z in the actual work.)
+	Y,     Z
+00	15.15	0.425
+01	17.35	-0.059
+02	22.44	-0.670
+03	28.15	-1.308
+04	31.39	-1.428
+05	32.08	-0.981
+06	32.52	-0.590
+07	32.56	0.027
+08	31.98	0.626
+09	32.21	3.973
+10	32.65	12.10
+11	37.22	23.59
+12  39.56	35.80
+13	32.59	59.92
+14  31.04	91.88
+15  32.84	101.02
+16	41.63	113.61
+17	58.85	118.71
+18	94.28	114.50
+19  121.79  110.03
+20  122.67	105.24
+21  123.06  104.112
+22  123.48	103.18
+23	123.94	102.40
+24
+
+That's most of it. 23 frames, 0% - 57.5%, or .766 seconds
+
+So the changes happen...
+
+dy: 00 - 04: 15 to 30's
+dy: 15 - 19: 32 to 120's (dy/dt: 9, 17, 36, 27)
+
+dz: 00 - 08: in 0 or 1
+dz: 09 - 17: 3 to 118 (dz/dt: 9, 11, 12, 24, 32, 10, 12, 5)
+dz: 17 - 23: 118 to 102 (dz/dy: -4, -4, -5, -1, -1, -1)
+
+
+actual x-distance to move: 80 units
+actual z-distance to move: 102 units
+
+dx: begin moving at 0.27s, stop at 0.67s (8 - 20)
+dz: begin moving at 0.27s, stop at 0.67s (when the heel touches the ledge)
