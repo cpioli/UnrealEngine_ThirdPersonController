@@ -95,11 +95,12 @@ FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& 
 
 bool UPlatformingFunctionLibrary::bCollidedWithWall(AInputStateMachineCharacter* Character)
 {
-	return Character->ShoulderToWallHeight.bIsAvailable 
-		|| Character->PelvisToWallHeight.bIsAvailable 
+	return Character->ShoulderToWallHeight.bIsAvailable
+		|| Character->PelvisToWallHeight.bIsAvailable
 		|| Character->KneeToWallHeight.bIsAvailable;
 }
 
+//not including foot wall position here because that could just be a step
 bool UPlatformingFunctionLibrary::bNotAgainstWall(AInputStateMachineCharacter* Character)
 {
 	return !Character->ShoulderToWallHeight.bIsAvailable
@@ -113,16 +114,25 @@ bool UPlatformingFunctionLibrary::bWallIsShort(AInputStateMachineCharacter* Char
 		&& (Character->PelvisToWallHeight.bIsAvailable || Character->KneeToWallHeight.bIsAvailable);
 
 }
-
-bool UPlatformingFunctionLibrary::bInRangeOfLedge(const FLedge& CurrentLedge, const UChildActorComponent* Position, const FVector& LastUpdateVelocity)
+//TODO: refactor this function so it's generalized for any child component position, not just shoulders
+bool UPlatformingFunctionLibrary::bUpperBodyInRangeOfLedge(const FLedge& CurrentLedge, const UChildActorComponent* Position, const FVector& LastUpdateVelocity)
 {
 	float LedgeToShoulderDistance = CurrentLedge.Location.Z - Position->GetComponentLocation().Z;
 	if (LastUpdateVelocity.Z > 0.f) { //if we are moving up in the elevation direction
 		return -10.f <= LedgeToShoulderDistance && 10.f >= LedgeToShoulderDistance;
 	}
 	else {
-		return LedgeToShoulderDistance >= 50.0f;;
+		return LedgeToShoulderDistance >= 50.0f;
 	}
+}
+
+bool UPlatformingFunctionLibrary::bLowerBodyInRangeOfLedge(const UChildActorComponent* ComponentLocation, const FLedge& CurrentLedge, const FVector& LastUpdateVelocity, const float maxDistance)
+{
+	float LedgeToChildActorDistance = CurrentLedge.Location.Z - ComponentLocation->GetComponentLocation().Z;
+	if (LastUpdateVelocity.Z > 0.0f) {
+
+	}
+	return FMath::Abs(LedgeToChildActorDistance) >= maxDistance;
 }
 
 //VectorLengthXY node is called as static float VSizeXY(FVector A) in C++
@@ -137,7 +147,34 @@ bool UPlatformingFunctionLibrary::bCanClimbLedge(const AInputStateMachineCharact
 	FVector lastUpdateVelocity = Character->GetCharacterMovement()->GetLastUpdateVelocity();
 	
 	return bIsPressedAgainstWall(forward, Character->ShoulderToWallHeight.Normal, /*DegreeRange*/10.0f)
-		&& bInRangeOfLedge(Character->CurrentLedge, Position, lastUpdateVelocity)
+		&& bUpperBodyInRangeOfLedge(Character->CurrentLedge, Position, lastUpdateVelocity)
+		&& lastUpdateVelocity.Size2D() >= 0.0f;
+}
+
+bool UPlatformingFunctionLibrary::bCanClimbLedgeLowerBody(const AInputStateMachineCharacter* Character, const UChildActorComponent* PelvicPos, const UChildActorComponent* KneePos)
+{
+	const UChildActorComponent* UsablePosition = nullptr;
+	FVector normal = FVector::ZeroVector;
+	bool usingKnee = false;
+	if (Character->PelvisToWallHeight.bIsAvailable) {
+		UsablePosition = PelvicPos;
+		usingKnee = false;
+		normal = Character->PelvisToWallHeight.Normal;
+	}
+	else if (Character->KneeToWallHeight.bIsAvailable) {
+		UsablePosition = KneePos;
+		usingKnee = true;
+		normal = Character->KneeToWallHeight.Normal;
+	}
+	else {
+		return false;
+	}
+
+	FVector forward = FRotationMatrix(Character->GetActorRotation()).GetScaledAxis(EAxis::X);
+	FVector lastUpdateVelocity = Character->GetCharacterMovement()->GetLastUpdateVelocity();
+
+	return bIsPressedAgainstWall(forward, normal, 10.0f)
+		&& bLowerBodyInRangeOfLedge(UsablePosition, Character->CurrentLedge, lastUpdateVelocity, 30.0f)
 		&& lastUpdateVelocity.Size2D() >= 0.0f;
 }
 

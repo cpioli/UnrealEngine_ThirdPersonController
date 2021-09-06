@@ -97,6 +97,9 @@ public:
 		FVector IKRightHandPosition;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FWallProjectionLocation FootToWallHeight;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		FWallProjectionLocation KneeToWallHeight;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

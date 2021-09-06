@@ -18,7 +18,6 @@ class THIRDPERSCONTROLLER_API UPlatformingFunctionLibrary : public UBlueprintFun
 
 private:
 	FVector GetWallPosition(AInputStateMachineCharacter *character);
-	
 
 public:
 	static float GetAngle(const FVector & A, const FVector & B);
@@ -50,10 +49,16 @@ public:
 
 	//Need to separate the UChildActorComponent object because C++ would not be aware of Components added in the Blueprint phase.
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bInRangeOfLedge(const FLedge &CurrentLedge, const UChildActorComponent *Position, const FVector &LastUpdateVelocity);
+		static bool bUpperBodyInRangeOfLedge(const FLedge &CurrentLedge, const UChildActorComponent *Position, const FVector &LastUpdateVelocity);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bLowerBodyInRangeOfLedge(const UChildActorComponent* ComponentLocation, const FLedge& CurrentLedge, const FVector& LastUpdateVelocity, const float maxDistance);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bCanClimbLedge(const AInputStateMachineCharacter *Character, const UChildActorComponent *Position);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bCanClimbLedgeLowerBody(const AInputStateMachineCharacter* Character, const UChildActorComponent* PelvicPos, const UChildActorComponent* KneePos);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static FVector GetLerpedPosition(const FVector& Begin, const FVector& End, const UCurveVector* Curve, const float T);

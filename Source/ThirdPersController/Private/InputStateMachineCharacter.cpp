@@ -57,8 +57,21 @@ float AInputStateMachineCharacter::GetHeightFromFloor(float downwardTraceDistanc
 //https://github.com/EpicGames/UnrealEngine/blob/c3caf7b6bf12ae4c8e09b606f10a09776b4d1f38/Engine/Source/Runtime/Engine/Classes/Kismet/KismetMathLibrary.inl
 FRotator AInputStateMachineCharacter::GetAlignmentToWall()
 {
+	FVector ChosenNormal = FVector::ZeroVector;
+	if (this->ShoulderToWallHeight.bIsAvailable)
+	{
+		ChosenNormal = this->ShoulderToWallHeight.Normal;
+	}
+	else if (this->PelvisToWallHeight.bIsAvailable)
+	{
+		ChosenNormal = this->PelvisToWallHeight.Normal;
+	}
+	else if (this->KneeToWallHeight.bIsAvailable)
+	{
+		ChosenNormal = this->KneeToWallHeight.Normal;
+	}
 	return FRotationMatrix::MakeFromXZ(
-		this->ShoulderToWallHeight.Normal * -1.0f, 
+		ChosenNormal * -1.0f, 
 		this->GetCapsuleComponent()->GetUpVector()).Rotator();
 
 }
