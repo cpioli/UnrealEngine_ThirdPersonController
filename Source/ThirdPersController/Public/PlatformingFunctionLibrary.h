@@ -19,6 +19,19 @@ class THIRDPERSCONTROLLER_API UPlatformingFunctionLibrary : public UBlueprintFun
 private:
 	FVector GetWallPosition(AInputStateMachineCharacter *character);
 
+	//Checks if the body is in range to react to a ledge
+	static bool bIsBodyInRangeOfLedgeAtPosition(const UChildActorComponent* Component, 
+		const FLedge& CurrentLedge, const FVector& LastUpdateVelocity, 
+		const float RelativeLowerBounds, const float RelativeUpperBounds);
+	//the parent function that can determine if we can climb ledge.
+	//exposes parameters so particular sections of the body can be examined.
+	//set to private with no UFUNCTION. UFUNCTIONs will specify sections of the body to check
+	static bool bCanClimbLedge(const AInputStateMachineCharacter* Char,
+		const UChildActorComponent* Component, 
+		const FWallProjectionLocation& WallHeightData,
+		const float& RelativeLowerBounds, 
+		const float& RelativeUpperBounds);
+
 public:
 	static float GetAngle(const FVector & A, const FVector & B);
 
@@ -41,10 +54,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bCollidedWithWall(AInputStateMachineCharacter *Character);
 
-	UFUNCTION(BlueprintCallable, Category = "Platforming")
+	UFUNCTION(BlueprintPure, Category = "Platforming")
 		static bool bNotAgainstWall(AInputStateMachineCharacter* Character);
 
-	UFUNCTION(BlueprintCallable, Category = "Platforming")
+	UFUNCTION(BlueprintPure, Category = "Platforming", meta=(DisplayName="Wall Is Short"))
 		static bool bWallIsShort(AInputStateMachineCharacter* Character);
 
 	//Need to separate the UChildActorComponent object because C++ would not be aware of Components added in the Blueprint phase.
@@ -55,11 +68,17 @@ public:
 		static bool bLowerBodyInRangeOfLedge(const UChildActorComponent* ComponentLocation, const FLedge& CurrentLedge, const FVector& LastUpdateVelocity, const float maxDistance);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanClimbLedge(const AInputStateMachineCharacter *Character, const UChildActorComponent *Position);
+		static bool bCanClimbLedgeUpperBody(const AInputStateMachineCharacter *Character, const UChildActorComponent *Position);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bCanClimbLedgeLowerBody(const AInputStateMachineCharacter* Character, const UChildActorComponent* PelvicPos, const UChildActorComponent* KneePos);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static FVector GetLerpedPosition(const FVector& Begin, const FVector& End, const UCurveVector* Curve, const float T);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bCanHangOnLedge(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
 };

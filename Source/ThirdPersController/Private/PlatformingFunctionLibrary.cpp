@@ -8,6 +8,51 @@
 #include "DrawDebugHelpers.h"
 
 /*
+Find out if there is a wall nearby us
+UNUSED
+*/
+FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter* character)
+{
+	FVector pos = character->GetMesh()->GetSocketLocation("root");
+	FVector start(pos.X, pos.Y, pos.Z + 1.0f);
+	float heightFactor = 0.0f;
+	//if(character.GetVelocity().Z < -200.0f && character.GetCharacterMovement().GetMovementMode() == 
+	return FVector(0.0f, 0.0f, 0.0f);
+}
+
+
+bool UPlatformingFunctionLibrary::bIsBodyInRangeOfLedgeAtPosition(const UChildActorComponent* Component,
+	const FLedge& CurrentLedge, const FVector& LastUpdateVelocity,
+	const float RelativeLowerBounds, const float RelativeUpperBounds)
+{
+	float RelativeLedgeToComponentDistance = CurrentLedge.Location.Z - Component->GetComponentLocation().Z;
+	if (LastUpdateVelocity.Z < 0.0f) {
+		return -10.0f <= RelativeLedgeToComponentDistance
+			&& 10.0f >= RelativeLedgeToComponentDistance;
+	}
+	else {
+		return RelativeLowerBounds <= RelativeLedgeToComponentDistance
+			&& RelativeUpperBounds >= RelativeLedgeToComponentDistance;
+	}
+}
+
+bool UPlatformingFunctionLibrary::bCanClimbLedge(const AInputStateMachineCharacter* Char,
+	const UChildActorComponent* Component,
+	const FWallProjectionLocation& WallHeightData,
+	const float& RelativeLowerBounds,
+	const float& RelativeUpperBounds)
+{
+	if (!WallHeightData.bIsAvailable) return false;
+
+	FVector forward = FRotationMatrix(Char->GetActorRotation()).GetScaledAxis(EAxis::X);
+	FVector lastUpdateVelocity = Char->GetCharacterMovement()->GetLastUpdateVelocity();
+
+	return bIsPressedAgainstWall(forward, WallHeightData.Normal, /*DegreeRange*/10.0f)
+		&& bIsBodyInRangeOfLedgeAtPosition(Component, Char->CurrentLedge, lastUpdateVelocity, RelativeLowerBounds, RelativeUpperBounds)
+		&& lastUpdateVelocity.Size2D() >= 0.0f;
+}
+
+/*
 generic function to retrieve an angle from two vectors
 */
 
@@ -18,18 +63,7 @@ float UPlatformingFunctionLibrary::GetAngle(const FVector & A, const FVector & B
 	return acos(dotProductValue);
 }
 
-	/*
-	Find out if there is a wall nearby us
-	UNUSED
-	*/
-FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter *character)
-{
-	FVector pos = character->GetMesh()->GetSocketLocation("root");
-	FVector start(pos.X, pos.Y, pos.Z + 1.0f);
-	float heightFactor = 0.0f;
-	//if(character.GetVelocity().Z < -200.0f && character.GetCharacterMovement().GetMovementMode() == 
-	return FVector(0.0f, 0.0f, 0.0f);
-}
+
 
 bool UPlatformingFunctionLibrary::bIsPressedAgainstWall(const FVector & forwardVector, const FVector & wallNormalVector, float degreeRange)
 {
@@ -88,7 +122,7 @@ FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& 
 	FVector sol;
 	sol.X = Shoulder.Location.X + Shoulder.Normal.X * 22.0f; //22.0 is a magic number representing the radius of the capsule collider.
 	sol.Y = Shoulder.Location.Y + Shoulder.Normal.Y * 22.0f;
-	sol.Z = TargetedLedge.Location.Z - 100.0f; //Another magic number representing where the midpoint of the capsule collider should be positioned
+	sol.Z = TargetedLedge.Location.Z - 98.0f; //Another magic number representing where the midpoint of the capsule collider should be positioned
 
 	return sol;
 }
@@ -122,7 +156,7 @@ bool UPlatformingFunctionLibrary::bUpperBodyInRangeOfLedge(const FLedge& Current
 		return -10.f <= LedgeToShoulderDistance && 10.f >= LedgeToShoulderDistance;
 	}
 	else {
-		return LedgeToShoulderDistance >= 50.0f;
+		return -15.0f <= LedgeToShoulderDistance && LedgeToShoulderDistance <= 30.0f;
 	}
 }
 
@@ -130,15 +164,15 @@ bool UPlatformingFunctionLibrary::bLowerBodyInRangeOfLedge(const UChildActorComp
 {
 	float LedgeToChildActorDistance = CurrentLedge.Location.Z - ComponentLocation->GetComponentLocation().Z;
 	if (LastUpdateVelocity.Z > 0.0f) {
-
+		return -10.f <= LedgeToChildActorDistance && 10.f >= LedgeToChildActorDistance;
 	}
-	return FMath::Abs(LedgeToChildActorDistance) >= maxDistance;
+	return FMath::Abs(LedgeToChildActorDistance) <= maxDistance;
 }
 
 //VectorLengthXY node is called as static float VSizeXY(FVector A) in C++
 //The function is just "Size2D()"
 //Also: needed to include "GameFrameworks/CharacterMovementComponent.h" to retrieve lastUpdateVelocity
-bool UPlatformingFunctionLibrary::bCanClimbLedge(const AInputStateMachineCharacter *Character, const UChildActorComponent *Position)
+bool UPlatformingFunctionLibrary::bCanClimbLedgeUpperBody(const AInputStateMachineCharacter* Character, const UChildActorComponent* Position)
 {
 	if (!Character->ShoulderToWallHeight.bIsAvailable) return false;
 
@@ -196,4 +230,15 @@ FVector UPlatformingFunctionLibrary::GetLerpedPosition(const FVector& Begin, con
 	sol.Z = Begin.Z + (End.Z - Begin.Z) * Curve->FloatCurves[2].Eval(T);
 
 	return sol;
+}
+
+bool UPlatformingFunctionLibrary::bCanHangOnLedge(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
+{
+	return bCanClimbLedge(Char, Char->ShoulderPositionComponent, Char->ShoulderToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
+}
+
+
+bool UPlatformingFunctionLibrary::bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
+{
+	return bCanClimbLedge(Char, Char->PelvisPositionComponent, Char->PelvisToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
 }

@@ -78,6 +78,19 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "IKHelpers")
 		bool bRightHandAgainstWall;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UChildActorComponent* ShoulderPositionComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UChildActorComponent* PelvisPositionComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UChildActorComponent* KneePositionComponent;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UChildActorComponent* FootPositionComponent;
+
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
 
