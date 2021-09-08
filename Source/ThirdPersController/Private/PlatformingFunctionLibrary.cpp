@@ -131,7 +131,8 @@ bool UPlatformingFunctionLibrary::bCollidedWithWall(AInputStateMachineCharacter*
 {
 	return Character->ShoulderToWallHeight.bIsAvailable
 		|| Character->PelvisToWallHeight.bIsAvailable
-		|| Character->KneeToWallHeight.bIsAvailable;
+		|| Character->KneeToWallHeight.bIsAvailable
+		|| Character->FootToWallHeight.bIsAvailable;
 }
 
 //not including foot wall position here because that could just be a step
@@ -178,4 +179,9 @@ bool UPlatformingFunctionLibrary::bCanHangOnLedge(const AInputStateMachineCharac
 bool UPlatformingFunctionLibrary::bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
 {
 	return bCanClimbLedge(Char, Char->PelvisPositionComponent, Char->PelvisToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
+}
+
+bool UPlatformingFunctionLibrary::bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
+{
+	return bCanClimbLedge(Char, Char->FootPositionComponent, Char->FootToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
 }

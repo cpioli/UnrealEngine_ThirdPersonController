@@ -68,4 +68,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static bool bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
 };
