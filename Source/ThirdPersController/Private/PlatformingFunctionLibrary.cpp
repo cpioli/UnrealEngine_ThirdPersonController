@@ -27,8 +27,8 @@ bool UPlatformingFunctionLibrary::bIsBodyInRangeOfLedgeAtPosition(const UChildAc
 {
 	float RelativeLedgeToComponentDistance = CurrentLedge.Location.Z - Component->GetComponentLocation().Z;
 	if (LastUpdateVelocity.Z < 0.0f) {
-		return -10.0f <= RelativeLedgeToComponentDistance
-			&& 10.0f >= RelativeLedgeToComponentDistance;
+		return -15.0f <= RelativeLedgeToComponentDistance
+			&& 15.0f >= RelativeLedgeToComponentDistance;
 	}
 	else {
 		return RelativeLowerBounds <= RelativeLedgeToComponentDistance
@@ -36,7 +36,8 @@ bool UPlatformingFunctionLibrary::bIsBodyInRangeOfLedgeAtPosition(const UChildAc
 	}
 }
 
-bool UPlatformingFunctionLibrary::bCanClimbLedge(const AInputStateMachineCharacter* Char,
+bool UPlatformingFunctionLibrary::bCanClimbLedge(
+	const AInputStateMachineCharacter* Char,
 	const UChildActorComponent* Component,
 	const FWallProjectionLocation& WallHeightData,
 	const float& RelativeLowerBounds,
@@ -51,6 +52,8 @@ bool UPlatformingFunctionLibrary::bCanClimbLedge(const AInputStateMachineCharact
 		&& bIsBodyInRangeOfLedgeAtPosition(Component, Char->CurrentLedge, lastUpdateVelocity, RelativeLowerBounds, RelativeUpperBounds)
 		&& lastUpdateVelocity.Size2D() >= 0.0f;
 }
+
+//PUBLIC FUNCTIONS
 
 /*
 generic function to retrieve an angle from two vectors
@@ -127,8 +130,19 @@ FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& 
 	return sol;
 }
 
-bool UPlatformingFunctionLibrary::bCollidedWithWall(AInputStateMachineCharacter* Character)
+bool UPlatformingFunctionLibrary::bCollidedWithWall(AInputStateMachineCharacter* Character, const float MaxSlopeAngle)
 {
+	bool isWalkable = false;;
+	if (Character->FootToWallHeight.bIsAvailable)
+	{
+		FVector Normal = Character->FootToWallHeight.Normal;
+
+		//double hypotenuse = FMath::Sqrt(FMath::Square(Normal.X) + FMath::Square(Normal.Y));
+		double angle = FMath::RadiansToDegrees(FMath::Acos(Normal.Z));
+		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Floor slope is %f"), angle, true));
+		isWalkable = angle < MaxSlopeAngle;
+		if (isWalkable) return false;
+	}
 	return Character->ShoulderToWallHeight.bIsAvailable
 		|| Character->PelvisToWallHeight.bIsAvailable
 		|| Character->KneeToWallHeight.bIsAvailable

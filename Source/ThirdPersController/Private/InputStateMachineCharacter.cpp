@@ -70,6 +70,13 @@ FRotator AInputStateMachineCharacter::GetAlignmentToWall()
 	{
 		ChosenNormal = this->KneeToWallHeight.Normal;
 	}
+	else if (this->FootToWallHeight.bIsAvailable)
+	{
+		ChosenNormal = this->FootToWallHeight.Normal;
+	}
+	else {
+		//TODO: raise a warning
+	}
 	return FRotationMatrix::MakeFromXZ(
 		ChosenNormal * -1.0f, 
 		this->GetCapsuleComponent()->GetUpVector()).Rotator();

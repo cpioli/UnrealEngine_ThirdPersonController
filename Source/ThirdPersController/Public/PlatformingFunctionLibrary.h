@@ -52,7 +52,7 @@ public:
 		static FVector SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCollidedWithWall(AInputStateMachineCharacter *Character);
+		static bool bCollidedWithWall(AInputStateMachineCharacter *Character, const float maxSlopeAngle);
 
 	UFUNCTION(BlueprintPure, Category = "Platforming")
 		static bool bNotAgainstWall(AInputStateMachineCharacter* Character);
@@ -64,11 +64,11 @@ public:
 		static FVector GetLerpedPosition(const FVector& Begin, const FVector& End, const UCurveVector* Curve, const float T);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanHangOnLedge(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
+		static bool bCanHangOnLedge(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
+		static bool bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, UPARAM() float RelativeLowerBounds, UPARAM() float RelativeUpperBounds);
+		static bool bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
 };
