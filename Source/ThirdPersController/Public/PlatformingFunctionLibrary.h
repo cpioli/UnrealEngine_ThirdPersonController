@@ -52,7 +52,7 @@ public:
 							   FColor& lineColor,  float duration = 12.0f, float thickness = 5.0f);
 	
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static FVector SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge);
+		static FVector SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge, const float& zAdjustment);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bCollidedWithWall(AInputStateMachineCharacter *Character, const float maxSlopeAngle);

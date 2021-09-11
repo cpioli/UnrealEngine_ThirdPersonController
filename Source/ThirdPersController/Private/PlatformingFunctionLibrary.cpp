@@ -121,12 +121,12 @@ void UPlatformingFunctionLibrary::DebugLine(const UWorld* InWorld, const FVector
 	DrawDebugLine(InWorld, _start, _end, lineColor, false, duration, 0U, thickness);
 }
 
-FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge)
+FVector UPlatformingFunctionLibrary::SnapToLedge(const FWallProjectionLocation& Shoulder, const FLedge& TargetedLedge, const float& zAdjustment)
 {
 	FVector sol;
 	sol.X = Shoulder.Location.X + Shoulder.Normal.X * 22.0f; //22.0 is a magic number representing the radius of the capsule collider.
 	sol.Y = Shoulder.Location.Y + Shoulder.Normal.Y * 22.0f;
-	sol.Z = TargetedLedge.Location.Z - 98.0f; //Another magic number representing where the midpoint of the capsule collider should be positioned
+	sol.Z = TargetedLedge.Location.Z - zAdjustment + 10.0f; //Another magic number representing where the midpoint of the capsule collider should be positioned
 
 	return sol;
 }
