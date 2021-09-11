@@ -7,6 +7,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "DrawDebugHelpers.h"
 
+//PRIVATE FUNCTIONS
+
 /*
 Find out if there is a wall nearby us
 UNUSED
@@ -19,7 +21,6 @@ FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter
 	//if(character.GetVelocity().Z < -200.0f && character.GetCharacterMovement().GetMovementMode() == 
 	return FVector(0.0f, 0.0f, 0.0f);
 }
-
 
 bool UPlatformingFunctionLibrary::bIsBodyInRangeOfLedgeAtPosition(const UChildActorComponent* Component,
 	const FLedge& CurrentLedge, const FVector& LastUpdateVelocity,
@@ -198,4 +199,13 @@ bool UPlatformingFunctionLibrary::bCanMantleLedgeInMidair(const AInputStateMachi
 bool UPlatformingFunctionLibrary::bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
 {
 	return bCanClimbLedge(Char, Char->FootPositionComponent, Char->FootToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
+}
+
+double UPlatformingFunctionLibrary::GetSlopeOfPlane(const FVector& Normal)
+{
+	return GetSlopeOfPlaneFromNormal(Normal);
+}
+
+bool UPlatformingFunctionLibrary::bInRange(const float& value, const FRange& range) {
+	return value >= range.Minimum && value < range.Maximum;
 }

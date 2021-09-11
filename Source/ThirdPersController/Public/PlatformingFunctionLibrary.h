@@ -17,12 +17,15 @@ class THIRDPERSCONTROLLER_API UPlatformingFunctionLibrary : public UBlueprintFun
 	GENERATED_BODY()
 
 private:
+	static inline double GetSlopeOfPlaneFromNormal(const FVector& Normal) { return FMath::RadiansToDegrees(FMath::Acos(Normal.Z)); }
+
 	FVector GetWallPosition(AInputStateMachineCharacter *character);
 
 	//Checks if the body is in range to react to a ledge
 	static bool bIsBodyInRangeOfLedgeAtPosition(const UChildActorComponent* Component, 
 		const FLedge& CurrentLedge, const FVector& LastUpdateVelocity, 
 		const float RelativeLowerBounds, const float RelativeUpperBounds);
+
 	//the parent function that can determine if we can climb ledge.
 	//exposes parameters so particular sections of the body can be examined.
 	//set to private with no UFUNCTION. UFUNCTIONs will specify sections of the body to check
@@ -34,7 +37,7 @@ private:
 
 public:
 	static float GetAngle(const FVector & A, const FVector & B);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bIsPressedAgainstWall(const FVector & forwardVector, const FVector & wallNormalVector, float degreeRange);
 
@@ -71,4 +74,14 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static bool bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming")
+		static double GetSlopeOfPlane(const FVector& Normal);
+
+	//**********************************
+	// USTRUCT Range's FUNCTIONS
+	//**********************************
+
+	UFUNCTION(BlueprintCallable, Category = "Platforming", meta = (DisplayName = "In Range"))
+		static bool bInRange(const float& value, const FRange& range);
 };

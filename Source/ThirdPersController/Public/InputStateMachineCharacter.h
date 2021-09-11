@@ -34,6 +34,17 @@ struct FLedge {
 	FVector Location;
 };
 
+USTRUCT(BlueprintType, DisplayName="Range")
+struct FRange {
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float Minimum;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	float Maximum;
+};
+
 UENUM(BlueprintType)
 namespace EInputState
 {
@@ -45,6 +56,18 @@ namespace EInputState
 		IS_Hanging		UMETA(DisplayName = "Hanging"),
 		IS_Mantling		UMETA(DisplayName = "Mantling"),
 		IS_AgainstWall	UMETA(DisplayName = "Against Wall")
+	};
+}
+
+UENUM(BlueprintType)
+namespace EWallCollision
+{
+	enum WallCollisionType
+	{
+		WCT_Shoulders	UMETA(DisplayName = "Shoulders"),
+		WCT_Pelvis		UMETA(DisplayName = "Pelvis"),
+		WCT_Knees		UMETA(DisplayName = "Knees"),
+		WCT_Feet		UMETA(DisplayName = "Feet")
 	};
 }
 
