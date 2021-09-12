@@ -138,16 +138,16 @@ bool UPlatformingFunctionLibrary::bCollidedWithWall(AInputStateMachineCharacter*
 	{
 		FVector Normal = Character->FootToWallHeight.Normal;
 
-		//double hypotenuse = FMath::Sqrt(FMath::Square(Normal.X) + FMath::Square(Normal.Y));
 		double angle = FMath::RadiansToDegrees(FMath::Acos(Normal.Z));
 		//GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Cyan, FString::Printf(TEXT("Floor slope is %f"), angle, true));
 		isWalkable = angle < MaxSlopeAngle;
 		if (isWalkable) return false;
+		
+		//next check: if it's just a step (ie. not a high wall height
 	}
 	return Character->ShoulderToWallHeight.bIsAvailable
 		|| Character->PelvisToWallHeight.bIsAvailable
-		|| Character->KneeToWallHeight.bIsAvailable
-		|| Character->FootToWallHeight.bIsAvailable;
+		|| Character->KneeToWallHeight.bIsAvailable;
 }
 
 //not including foot wall position here because that could just be a step
