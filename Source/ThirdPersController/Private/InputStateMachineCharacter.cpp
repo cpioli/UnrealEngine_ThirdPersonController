@@ -2,6 +2,7 @@
 
 
 #include "InputStateMachineCharacter.h"
+#include "InputStateCharacterAnimInstance.h"
 #include "ControlInputStateBase.h"
 #include "DrawDebugHelpers.h"
 #include "Components/CapsuleComponent.h"
@@ -96,10 +97,12 @@ void AInputStateMachineCharacter::SetCurrentState(TSubclassOf<UControlInputState
 		if (this->CurrentInputState->GetClass() == newState->GetClass())
 			return;
 		PreviousInputState = CurrentInputState;
+		CharAnimBP->PreviousInputState = CharAnimBP->CurrentInputState;
 		CurrentInputState = nullptr;
 		PreviousInputState->OnStateExit(this);
 	}
 	CurrentInputState = *StateRepository.Find(newState);
+	CharAnimBP->CurrentInputState = *EnumStateRepository.Find(newState);
 	CurrentInputState->OnStateEnter(this);
 
 	if (GEngine)
@@ -115,9 +118,15 @@ void AInputStateMachineCharacter::SetCurrentState(TSubclassOf<UControlInputState
 	}
 }
 
+/// <summary>
+/// Updates the Anim Instance's state when no change is necessary to the Input Control State
+/// Assumes a value for CharAnimBP's CurrentInputState already exists.
+/// </summary>
+/// <param name="newState"></param>
 void AInputStateMachineCharacter::SetCurrentAnimState(TEnumAsByte<EInputState::InputState> newState)
 {
-	//TODO: Implement once child of Anim Instance is defined and implemented
+	CharAnimBP->PreviousInputState = CharAnimBP->CurrentInputState;
+	CharAnimBP->CurrentInputState = newState;
 }
 
 // equivalent draw debug line calls from "TraceLineByChannel" Kismet node can be found in this file

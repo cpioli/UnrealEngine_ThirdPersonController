@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+//#include "InputStateCharacterAnimInstance.h"
 #include "InputStateMachineCharacter.generated.h"
 
 USTRUCT(BlueprintType, DisplayName="WallProjection")
@@ -74,6 +75,7 @@ namespace EWallCollision
 //forward declarations to handle circular dependency
 //between this class and ControlInputStateBase.h
 class UControlInputStateBase;
+class UInputStateCharacterAnimInstance;
 
 UCLASS()
 class THIRDPERSCONTROLLER_API AInputStateMachineCharacter : public ACharacter
@@ -81,10 +83,13 @@ class THIRDPERSCONTROLLER_API AInputStateMachineCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
-
+	
 public:
 	// Sets default values for this character's properties
 	AInputStateMachineCharacter();
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		UInputStateCharacterAnimInstance *CharAnimBP;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool bIsSprintButtonPressed;
@@ -115,7 +120,7 @@ public:
 
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
-	TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
+		TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 		TMap<TSubclassOf<UControlInputStateBase>, TEnumAsByte<EInputState::InputState>> EnumStateRepository;
@@ -174,7 +179,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "State Machine")
 		void SetCurrentState(TSubclassOf<UControlInputStateBase> newState);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, Category = "State Machine")
 		void SetCurrentAnimState(TEnumAsByte<EInputState::InputState> newState);
 
 	UFUNCTION(BlueprintCallable, meta=(AdvancedDisplay="TraceColor,TraceHitColor"))
