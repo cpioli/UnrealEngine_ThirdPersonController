@@ -40,6 +40,9 @@ public:
 		float HeightFromGround;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		float VerticalSpeed;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		FVector IKLeftHandEffector;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)

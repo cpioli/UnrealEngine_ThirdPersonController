@@ -118,7 +118,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		UChildActorComponent* FootPositionComponent;
 
-
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "State Machine")
 		TMap<TSubclassOf<UControlInputStateBase>, UControlInputStateBase*> StateRepository;
 
@@ -157,6 +156,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 		float CurrentHeightFromFloor;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+		FVector LastFrameVelocity;
 
 
 protected:
