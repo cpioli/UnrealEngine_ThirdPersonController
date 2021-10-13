@@ -19,7 +19,7 @@ class THIRDPERSCONTROLLER_API UPlatformingFunctionLibrary : public UBlueprintFun
 private:
 	static inline double GetSlopeOfPlaneFromNormal(const FVector& Normal) { return FMath::RadiansToDegrees(FMath::Acos(Normal.Z)); }
 
-	FVector GetWallPosition(AInputStateMachineCharacter *character);
+	FVector GetWallPosition(AInputStateMachineCharacter *Character);
 
 	//Checks if the body is in range to react to a ledge
 	static bool bIsBodyInRangeOfLedgeAtPosition(const UChildActorComponent* Component, 
@@ -29,7 +29,7 @@ private:
 	//the parent function that can determine if we can climb ledge.
 	//exposes parameters so particular sections of the body can be examined.
 	//set to private with no UFUNCTION. UFUNCTIONs will specify sections of the body to check
-	static bool bCanClimbLedge(const AInputStateMachineCharacter* Char,
+	static bool bCanClimbLedge(const AInputStateMachineCharacter* Character,
 		const UChildActorComponent* Component, 
 		const FWallProjectionLocation& WallHeightData,
 		const float& RelativeLowerBounds, 
@@ -67,13 +67,13 @@ public:
 		static FVector GetLerpedPosition(const FVector& Begin, const FVector& End, const UCurveVector* Curve, const float T);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanHangOnLedge(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
+		static bool bCanHangOnLedge(const AInputStateMachineCharacter* Character, float RelativeLowerBounds, float RelativeUpperBounds);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
+		static bool bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Character, float RelativeLowerBounds, float RelativeUpperBounds);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
-		static bool bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds);
+		static bool bCanReachLedgeByFooting(const AInputStateMachineCharacter* Character, float RelativeLowerBounds, float RelativeUpperBounds);
 
 	UFUNCTION(BlueprintCallable, Category = "Platforming")
 		static double GetSlopeOfPlane(const FVector& Normal);

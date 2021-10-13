@@ -13,9 +13,9 @@
 Find out if there is a wall nearby us
 UNUSED
 */
-FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter* character)
+FVector UPlatformingFunctionLibrary::GetWallPosition(AInputStateMachineCharacter* Character)
 {
-	FVector pos = character->GetMesh()->GetSocketLocation("root");
+	FVector pos = Character->GetMesh()->GetSocketLocation("root");
 	FVector start(pos.X, pos.Y, pos.Z + 1.0f);
 	float heightFactor = 0.0f;
 	//if(character.GetVelocity().Z < -200.0f && character.GetCharacterMovement().GetMovementMode() == 
@@ -185,20 +185,20 @@ FVector UPlatformingFunctionLibrary::GetLerpedPosition(const FVector& Begin, con
 	return sol;
 }
 
-bool UPlatformingFunctionLibrary::bCanHangOnLedge(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
+bool UPlatformingFunctionLibrary::bCanHangOnLedge(const AInputStateMachineCharacter* Character, float RelativeLowerBounds, float RelativeUpperBounds)
 {
-	return bCanClimbLedge(Char, Char->ShoulderPositionComponent, Char->ShoulderToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
+	return bCanClimbLedge(Character, Character->ShoulderPositionComponent, Character->ShoulderToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
 }
 
 
-bool UPlatformingFunctionLibrary::bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
+bool UPlatformingFunctionLibrary::bCanMantleLedgeInMidair(const AInputStateMachineCharacter* Character, float RelativeLowerBounds, float RelativeUpperBounds)
 {
-	return bCanClimbLedge(Char, Char->PelvisPositionComponent, Char->PelvisToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
+	return bCanClimbLedge(Character, Character->PelvisPositionComponent, Character->PelvisToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
 }
 
-bool UPlatformingFunctionLibrary::bCanReachLedgeByFooting(const AInputStateMachineCharacter* Char, float RelativeLowerBounds, float RelativeUpperBounds)
+bool UPlatformingFunctionLibrary::bCanReachLedgeByFooting(const AInputStateMachineCharacter* Character, float RelativeLowerBounds, float RelativeUpperBounds)
 {
-	return bCanClimbLedge(Char, Char->FootPositionComponent, Char->FootToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
+	return bCanClimbLedge(Character, Character->FootPositionComponent, Character->FootToWallHeight, RelativeLowerBounds, RelativeUpperBounds);
 }
 
 double UPlatformingFunctionLibrary::GetSlopeOfPlane(const FVector& Normal)
